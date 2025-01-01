@@ -125,6 +125,7 @@ const Page = (data) => {
               />
               <InputField
                 label="Subject BMI (kg/m^2)"
+                name="Subject BMI (kg/m^2)"
                 type="number"
                 isDisabled={true}
                 placeholder=""
