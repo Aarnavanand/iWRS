@@ -1,21 +1,19 @@
-import React from "react";
-import useColorMode from "../hooks/useColorMode";
+import { useEffect } from "react";
+import useLocalStorage from "./useLocalStorage";
 
-const ColorModeComponent = () => {
-  const [colorMode, setColorMode] = useColorMode();
+const useColorMode = () => {
+  const [colorMode, setColorMode] = useLocalStorage("color-theme", "light");
 
-  const toggleColorMode = () => {
-    setColorMode(colorMode === "light" ? "dark" : "light");
-  };
+  useEffect(() => {
+    const className = "dark";
+    const bodyClass = window.document.body.classList;
 
-  return (
-    <div>
-      <p>Current Color Mode: {colorMode}</p>
-      <button onClick={toggleColorMode}>
-        Toggle to {colorMode === "light" ? "dark" : "light"} mode
-      </button>
-    </div>
-  );
+    colorMode === "dark"
+      ? bodyClass.add(className)
+      : bodyClass.remove(className);
+  }, [colorMode]);
+
+  return [colorMode, setColorMode];
 };
 
-export default ColorModeComponent;
+export default useColorMode;
