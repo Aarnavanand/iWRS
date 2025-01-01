@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "target": "ES2017"
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/app/profile/page.jsx",
+    "src/app/forms/form-layout/page.jsx",
+    "src/app/forms/form-elements/page.jsx",
+    "src/app/chart/page.jsx",
+    "src/app/calendar/page.jsx",
+    "src/app/auth/signup/page.jsx",
+    "src/components/Tables/TableTwo.jsx",
+    "src/components/Tables/TableThree.jsx",
+    "src/components/Tables/TableOne.jsx",
+    "src/components/Tables/TableFour.jsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
