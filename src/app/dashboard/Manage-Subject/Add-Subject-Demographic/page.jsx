@@ -4,6 +4,8 @@ import InputField from "@/components/Form/InputField";
 import RadioFour from "@/components/Checkboxes/RadioFour";
 import { useForm } from "react-hook-form";
 
+
+
 const Page = (data) => {
 
   const {
@@ -61,15 +63,15 @@ const Page = (data) => {
               <InputField
                 label="Subject Number"
                 name="Subject Number"
-                type="number"
+                type="text"
+                isDisabled={true}
                 placeholder=""
-                defaultValue={data?.username}
-                register={register}
+                defaultValue={data?.subjectNumber}
                 error={errors?.username}
               />
               <InputField
                 label="Subject Initial"
-                name="Subject Initial"
+                name="subjectInitial"
                 type="text"
                 placeholder=""
                 defaultValue={data?.username}
@@ -88,7 +90,7 @@ const Page = (data) => {
               </div>
               <InputField
                 label="Subject DOB"
-                name="Subject DoB"
+                name="dob"
                 type="date"
                 placeholder=""
                 defaultValue={data?.username}
@@ -97,17 +99,16 @@ const Page = (data) => {
               />
               <InputField
                 label="Subject Current Age"
-                name="Subject Current Age"
+                name="Current Age"
                 type="number"
                 placeholder=""
                 isDisabled={true}
                 defaultValue={age}
-                register={register}
                 error={errors?.username}
               />
               <InputField
                 label="Subject Height (in cm)"
-                name="Subject Height (in cm)"
+                name="Height"
                 type="number"
                 placeholder=""
                 defaultValue={data?.username}
@@ -130,7 +131,6 @@ const Page = (data) => {
                 isDisabled={true}
                 placeholder=""
                 defaultValue={bmi}
-                register={register}
                 error={errors?.username}
               />
               <input

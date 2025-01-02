@@ -21,7 +21,6 @@ const InputField = ({
           </label>
           <input
             type={type}
-            {...register(name)}
             placeholder={placeholder}
             defaultValue={defaultValue}
             disabled={isDisabled}
