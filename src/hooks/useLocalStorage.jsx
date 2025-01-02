@@ -1,39 +1,45 @@
 "use client";
-import React from "react";
-import useLocalStorage from "./useLocalStorage";
+import { useEffect, useState } from "react";
 
-const LocalStorageForm = () => {
-  const [name, setName] = useLocalStorage("name", "");
-  const [age, setAge] = useLocalStorage("age", 0);
+function useLocalStorage(key, initialValue) {
+  // State to store our value
+  // Pass initial state function to useState so logic is only executed once
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      // Get from local storage by key
+      if (typeof window !== "undefined") {
+        // browser code
+        const item = window.localStorage.getItem(key);
+        // Parse stored json or if none return initialValue
+        return item ? JSON.parse(item) : initialValue;
+      }
+    } catch (error) {
+      // If error also return initialValue
+      console.log(error);
+      return initialValue;
+    }
+  });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    alert(`Name: ${name}, Age: ${age}`);
-  };
+  // useEffect to update local storage when the state changes
+  useEffect(() => {
+    try {
+      // Allow value to be a function so we have same API as useState
+      const valueToStore =
+        typeof storedValue === "function"
+          ? storedValue(storedValue)
+          : storedValue;
+      // Save state
+      if (typeof window !== "undefined") {
+        // browser code
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+      }
+    } catch (error) {
+      // A more advanced implementation would handle the error case
+      console.log(error);
+    }
+  }, [key, storedValue]);
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="name">Name:</label>
-        <input
-          type="text"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="age">Age:</label>
-        <input
-          type="number"
-          id="age"
-          value={age}
-          onChange={(e) => setAge(Number(e.target.value))}
-        />
-      </div>
-      <button type="submit">Submit</button>
-    </form>
-  );
-};
+  return [storedValue, setStoredValue];
+}
 
-export default LocalStorageForm;
+export default useLocalStorage;

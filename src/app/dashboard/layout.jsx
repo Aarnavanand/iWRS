@@ -7,17 +7,17 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 
 export default function RootLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  // const [loading, setLoading] = useState(true);
 
   // const pathname = usePathname();
 
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 2000);
-  }, []);
+  // useEffect(() => {
+  //   setTimeout(() => setLoading(false), 2000);
+  // }, []);
 
   return (
         <div className="dark:bg-boxdark-2 dark:text-bodydark">
-          <DefaultLayout>{loading ? <Loader /> : children}</DefaultLayout>
+          <DefaultLayout>{children}</DefaultLayout>
         </div>
   );
 }
