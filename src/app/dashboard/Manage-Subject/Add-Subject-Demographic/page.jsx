@@ -4,8 +4,6 @@ import InputField from "@/components/Form/InputField";
 import RadioFour from "@/components/Checkboxes/RadioFour";
 import { useForm } from "react-hook-form";
 
-
-
 const Page = (data) => {
 
   const {

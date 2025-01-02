@@ -1,25 +1,88 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import * as cookie from 'cookie';
 import ClickOutside from '@/components/ClickOutside';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const router = useRouter();
 
-  // Replace dynamic user fetching with a constant field
-  const user = {
-    fullName: 'John Doe',
-    email: 'john.doe@example.com',
-    avatar: '/assets/sample-avatar.png', // Replace with your avatar URL or path
-  };
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get('/api/users/getLoginUser', {
+          withCredentials: true, // Ensures cookies are sent with the request
+        });
+        setUser(response.data.user); // Update state with the 'user' object
+        setIsAuthenticated(true); // User is authenticated
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setIsAuthenticated(false); // User is not authenticated
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const cookies = cookie.parse(document.cookie);
+        const token = cookies.token;
+  
+        if (token) {
+          const response = await axios.post(
+            '/api/verifyToken',
+            { token },
+            { withCredentials: true }
+          );
+  
+          if (!response.data.valid) {
+            document.cookie = 'token=; Max-Age=0; path=/'; // Clear token cookie
+            setIsAuthenticated(false);
+          }
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error('Error verifying token:', error);
+        document.cookie = 'token=; Max-Age=0; path=/'; // Clear token cookie on error
+        setIsAuthenticated(false);
+      }
+    };
+  
+    const interval = setInterval(checkToken, 5 * 60 * 1000); // Check every 5 minutes
+    checkToken(); // Run immediately on mount
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+  
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/login'); // Redirect to login when unauthenticated
+    }
+  }, [isAuthenticated, router]);
+  
 
   // Handle logout
-  const handleLogout = () => {
-    console.log('Logout triggered');
-    router.push('/login'); // Redirect to login page after logout
+  const handleLogout = async () => {
+    try {
+      await axios.post(
+        '/api/users/logout',
+        {},
+        {
+          withCredentials: true, // Ensures cookies are handled correctly
+        }
+      );
+      router.push('/login'); // Redirect to login page after logout
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   return (
@@ -30,16 +93,18 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            {user.fullName}
+            {user ? user.fullName : 'Loading...'}
           </span>
-          <span className="block text-xs">{user.email}</span>
+          <span className="block text-xs">
+            {user ? user.email : 'Loading...'}
+          </span>
         </span>
 
         <span className="h-12 w-12 rounded-full">
           <Image
             width={112}
             height={112}
-            src={user.avatar}
+            src={user?.avatar || '/assets/color.svg'}
             alt="User Avatar"
           />
         </span>
