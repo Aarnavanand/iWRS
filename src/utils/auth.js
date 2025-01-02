@@ -45,7 +45,7 @@ export function authenticateUser(handler, allowedRoles) {
       // Proceed to the actual handler
       return handler(req, res);
     } catch (error) {
-      console.error("Authentication error occurred."); // Avoid leaking full error details
+      console.error("Authentication error occurred."); 
       return new Response(
         JSON.stringify({ message: "Authentication failed" }),
         { status: 403 }

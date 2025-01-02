@@ -381,8 +381,7 @@ const menuGroups = [
         label: "App Settings",
         route: "#",
         children: [
-          { label: "Change Password", route: "/auth/signin" },
-          { label: "Sign Up", route: "/auth/signup" },
+          { label: "Change Password", route: "/dashboard/settings" }
         ],
       },
     ],

@@ -5,19 +5,6 @@ import { useForm } from "react-hook-form";
 
 const Page = (data) => {
 
-// const   data={
-//     username: "john_doe",
-//     email: "john@example.com",
-//     password: "password123",
-//     firstName: "John",
-//     lastName: "Doe",
-//     phone: "123-456-7890",
-//     address: "123 Main St",
-//     bloodType: "O+",
-//     birthday: "1990-01-01",
-//     sex: "male",
-//     img: "path/to/image.jpg",
-//   }
 
 
 
