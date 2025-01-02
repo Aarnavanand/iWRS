@@ -5,7 +5,6 @@ import RadioFour from "@/components/Checkboxes/RadioFour";
 import { useForm } from "react-hook-form";
 
 const Page = (data) => {
-
   const {
     register,
     handleSubmit,
@@ -14,6 +13,16 @@ const Page = (data) => {
     reset,
     formState: { errors },
   } = useForm();
+=======
+
+
+
+const {
+  register,
+  handleSubmit,
+  formState: { errors },
+} = useForm();
+
 
   const onSubmit = handleSubmit((formData) => {
     console.log(formData);

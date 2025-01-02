@@ -15,12 +15,12 @@ async function updatePassword(req) {
 
   try {
     // Extracting data from the request body
-    const { userId, newPassword, password } = await req.json(); // Include password for Admin and CRC
+    const { email, newPassword, password } = await req.json(); // Include password for Admin and CRC
 
     // Check for missing required fields
-    if (!userId || !newPassword || (["002", "003"].includes(req.user.role) && !password)) {
+    if (!email || !newPassword || (["002", "003"].includes(req.user.role) && !password)) {
       return NextResponse.json(
-        { message: "Missing userId, newPassword, or password" },
+        { message: "Missing email, newPassword, or password" },
         { status: 400 }
       );
     }
@@ -28,8 +28,8 @@ async function updatePassword(req) {
     // Get the role and ID of the requester (from authentication middleware)
     const { role: requesterRole, id: requesterId } = req.user;
 
-    // Find the user to update by their ID
-    const userToUpdate = await User.findById(userId);
+    // Find the user to update by their email
+    const userToUpdate = await User.findOne({ email });
 
     // Check if the user exists
     if (!userToUpdate) {

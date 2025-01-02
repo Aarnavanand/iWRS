@@ -3,10 +3,15 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+
+import axios from 'axios';
+import * as cookie from 'cookie';
+
 import ClickOutside from '@/components/ClickOutside';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
   const router = useRouter();
 
   // Replace dynamic user fetching with a constant field
@@ -15,6 +20,66 @@ const DropdownUser = () => {
     email: 'john.doe@example.com',
     avatar: '/assets/sample-avatar.png', // Replace with your avatar URL or path
   };
+=======
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get('/api/users/getLoginUser', {
+          withCredentials: true, // Ensures cookies are sent with the request
+        });
+        setUser(response.data.user); // Update state with the 'user' object
+        setIsAuthenticated(true); // User is authenticated
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        setIsAuthenticated(false); // User is not authenticated
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const checkToken = async () => {
+      try {
+        const cookies = cookie.parse(document.cookie);
+        const token = cookies.token;
+  
+        if (token) {
+          const response = await axios.post(
+            '/api/verifyToken',
+            { token },
+            { withCredentials: true }
+          );
+  
+          if (!response.data.valid) {
+            document.cookie = 'token=; Max-Age=0; path=/'; // Clear token cookie
+            setIsAuthenticated(false);
+          }
+        } else {
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error('Error verifying token:', error);
+        document.cookie = 'token=; Max-Age=0; path=/'; // Clear token cookie on error
+        setIsAuthenticated(false);
+      }
+    };
+  
+    const interval = setInterval(checkToken, 5 * 60 * 1000); // Check every 5 minutes
+    checkToken(); // Run immediately on mount
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+  
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push('/login'); // Redirect to login when unauthenticated
+    }
+  }, [isAuthenticated, router]);
+  
 
   // Handle logout
   const handleLogout = () => {
